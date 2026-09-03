@@ -34,5 +34,32 @@ export interface Progress {
 
 export type ProgressMap = Record<ItemId, Progress>
 
+// User-authored mnemonics, kept apart so "restore original" always works.
+export type CustomMnemonics = Record<ItemId, string>
+
 export const itemId = (type: ItemType, char: string): ItemId =>
   `${type}:${char}` as ItemId
+
+export interface Settings {
+  batch: number
+  cap: number
+  hints: boolean
+  strict: boolean
+}
+
+export interface Stats {
+  answered: number
+  correct: number
+  todayReviews: number
+  streak: number
+}
+
+// The only fields written to storage.
+export interface PersistedState {
+  progress: ProgressMap
+  custom: CustomMnemonics
+  settings: Settings
+  level: number
+  stats: Stats
+  offset: number
+}
