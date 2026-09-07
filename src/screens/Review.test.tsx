@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import App from '../App.tsx'
 import { clear, load } from '../engine/storage.ts'
@@ -96,5 +96,28 @@ describe('review loop, keyboard only', () => {
     await user.click(screen.getByRole('button', { name: /begin reviews/i }))
     await user.click(screen.getByRole('button', { name: /close/i }))
     expect(screen.getByRole('button', { name: /begin reviews/i })).toBeInTheDocument()
+  })
+})
+
+describe('lesson -> drill -> review path', () => {
+  it('commits a batch and drills it', async () => {
+    const user = userEvent.setup()
+    seedStorage({ level: 1 })
+    render(<App />)
+
+    await user.click(screen.getByRole('button', { name: /take \d+ lessons/i }))
+    // walk to the last card
+    for (let i = 0; i < 4; i++) {
+      await user.click(screen.getByRole('button', { name: /^next$/i }))
+    }
+    await user.click(screen.getByRole('button', { name: /enter all 5 into the schedule/i }))
+    await user.click(screen.getByRole('button', { name: /drill the batch/i }))
+
+    // now in a review session of 5
+    const header = screen.getByRole('button', { name: /close/i }).closest('header')!
+    expect(within(header).getByText(/1 of 5/)).toBeInTheDocument()
+
+    const saved = load()
+    expect(Object.keys(saved?.progress ?? {})).toHaveLength(5)
   })
 })

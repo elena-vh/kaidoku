@@ -1,9 +1,9 @@
-// Placeholder Today - the way into the review loop. The full screen (counts,
-// level progress, leech shortlist) comes later.
+// Placeholder Today - a way into the review and lesson loops. The full screen
+// (counts, level progress, leech shortlist) comes later.
 
 import { useApp, useDispatch, useNow } from '../state/AppContext.tsx'
 import { CORPUS } from '../data/corpus.ts'
-import { dueQueue } from '../engine/queues.ts'
+import { dueQueue, lessonQueue } from '../engine/queues.ts'
 
 export function TodayScreen() {
   const state = useApp()
@@ -11,6 +11,7 @@ export function TodayScreen() {
   const now = useNow()
 
   const due = dueQueue(CORPUS, state.progress, now)
+  const lessons = lessonQueue(CORPUS, state.progress, state.level)
 
   return (
     <section aria-label="Today">
@@ -34,6 +35,20 @@ export function TodayScreen() {
         }
       >
         Begin reviews
+      </button>
+
+      <p>{lessons.length} lesson{lessons.length === 1 ? '' : 's'} open.</p>
+      <button
+        type="button"
+        disabled={lessons.length === 0}
+        onClick={() =>
+          dispatch({
+            type: 'lessons/start',
+            ids: lessons.slice(0, state.settings.batch).map((i) => i.id),
+          })
+        }
+      >
+        Take {Math.min(state.settings.batch, lessons.length || state.settings.batch)} lessons
       </button>
     </section>
   )
