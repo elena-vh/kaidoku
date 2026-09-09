@@ -2,7 +2,7 @@
 // due +4h, then offers to drill it straight away.
 
 import { useApp, useDispatch, useNow } from '../state/AppContext.tsx';
-import { itemById, partGlyphs } from '../data/corpus.ts';
+import { itemById, partGlyphs } from '../data/catalogue.ts';
 import { mnemonicFor } from '../lib/verdict.ts';
 import { typeLabel } from '../lib/format.ts';
 

@@ -91,7 +91,12 @@ describe('isUnlocked', () => {
 });
 
 describe('dueQueue', () => {
-  const corpus = [kanji('a', 1), kanji('b', 1), kanji('c', 1), kanji('d', 1)];
+  const catalogue = [
+    kanji('a', 1),
+    kanji('b', 1),
+    kanji('c', 1),
+    kanji('d', 1),
+  ];
   const progress: ProgressMap = {
     [itemId('kanji', 'a')]: p(2, T0 - 5 * HOUR_MS),
     [itemId('kanji', 'b')]: p(1, T0 - 20 * HOUR_MS),
@@ -100,37 +105,37 @@ describe('dueQueue', () => {
   };
 
   it('returns only due, un-sealed items, soonest-due first', () => {
-    const q = dueQueue(corpus, progress, T0);
+    const q = dueQueue(catalogue, progress, T0);
     expect(q.map((i) => i.char)).toEqual(['b', 'a']);
   });
 
   it('is empty when nothing is due', () => {
-    expect(dueQueue(corpus, {}, T0)).toEqual([]);
+    expect(dueQueue(catalogue, {}, T0)).toEqual([]);
   });
 });
 
 describe('lessonQueue', () => {
   it('offers unlocked, unstarted items ordered radical -> kanji -> vocab, by level', () => {
-    const corpus = [
+    const catalogue = [
       vocab('w2', 2, []),
       kanji('k2', 2),
       radical('r2', 2),
       kanji('k1', 1),
       radical('r1', 1),
     ];
-    const q = lessonQueue(corpus, {}, 2);
+    const q = lessonQueue(catalogue, {}, 2);
     expect(q.map((i) => i.char)).toEqual(['r1', 'k1', 'r2', 'k2', 'w2']);
   });
 
   it('excludes items that already have progress', () => {
-    const corpus = [kanji('k1', 1), radical('r1', 1)];
-    const q = lessonQueue(corpus, { [itemId('kanji', 'k1')]: p(0) }, 1);
+    const catalogue = [kanji('k1', 1), radical('r1', 1)];
+    const q = lessonQueue(catalogue, { [itemId('kanji', 'k1')]: p(0) }, 1);
     expect(q.map((i) => i.char)).toEqual(['r1']);
   });
 
   it('excludes items above the level and locked words', () => {
-    const corpus = [kanji('k3', 3), vocab('w1', 1, ['x'])];
-    expect(lessonQueue(corpus, {}, 1)).toEqual([]);
+    const catalogue = [kanji('k3', 3), vocab('w1', 1, ['x'])];
+    expect(lessonQueue(catalogue, {}, 1)).toEqual([]);
   });
 });
 
@@ -147,37 +152,37 @@ describe('canAdvance', () => {
   };
 
   it('is false below the 90% boundary and true at it', () => {
-    const corpus = makeLevel(100, 1);
-    expect(canAdvance(1, withAdept(corpus, 89), corpus)).toBe(false);
-    expect(canAdvance(1, withAdept(corpus, 90), corpus)).toBe(true);
+    const catalogue = makeLevel(100, 1);
+    expect(canAdvance(1, withAdept(catalogue, 89), catalogue)).toBe(false);
+    expect(canAdvance(1, withAdept(catalogue, 90), catalogue)).toBe(true);
   });
 
   it('counts stage 4 and above', () => {
-    const corpus = makeLevel(10, 1);
+    const catalogue = makeLevel(10, 1);
     const map: ProgressMap = {};
-    corpus.forEach((item, i) => {
+    catalogue.forEach((item, i) => {
       map[item.id] = p(i < 9 ? (i % 2 ? 5 : 7) : 3);
     });
-    expect(canAdvance(1, map, corpus)).toBe(true);
+    expect(canAdvance(1, map, catalogue)).toBe(true);
   });
 
   it('ignores radicals and vocab', () => {
-    const corpus: Item[] = [
+    const catalogue: Item[] = [
       kanji('k1', 1),
       ...Array.from({ length: 9 }, (_, i) => kanji(`k${i + 2}`, 1)),
       radical('r1', 1),
       vocab('w1', 1, []),
     ];
     const map = withAdept(
-      corpus.filter((i) => i.type === 'kanji'),
+      catalogue.filter((i) => i.type === 'kanji'),
       9,
     );
-    expect(canAdvance(1, map, corpus)).toBe(true);
+    expect(canAdvance(1, map, catalogue)).toBe(true);
   });
 
   it('never advances past the last level', () => {
-    const corpus = makeLevel(10, 5);
-    expect(canAdvance(5, withAdept(corpus, 10), corpus)).toBe(false);
+    const catalogue = makeLevel(10, 5);
+    expect(canAdvance(5, withAdept(catalogue, 10), catalogue)).toBe(false);
   });
 
   it('is false for a level with no kanji', () => {

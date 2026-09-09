@@ -89,7 +89,7 @@ export const INTERVALS: readonly [
   null,
 ] = [4, 8, 24, 48, 168, 336, 720, null];
 
-export const LEECH_LAPSES = 3;
+export const REPEATED_FAILURE_THRESHOLD = 3;
 
 export const VOCAB_UNLOCK_STAGE: Stage = 3;
 export const ADEPT_STAGE: Stage = 4;

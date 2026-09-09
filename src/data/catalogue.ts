@@ -64,16 +64,18 @@ function build(): Item[] {
   return out.filter((i) => i.level <= MAX_LEVEL);
 }
 
-export const CORPUS: readonly Item[] = build();
+export const CATALOGUE: readonly Item[] = build();
 
-const BY_ID: ReadonlyMap<ItemId, Item> = new Map(CORPUS.map((i) => [i.id, i]));
+const BY_ID: ReadonlyMap<ItemId, Item> = new Map(
+  CATALOGUE.map((i) => [i.id, i]),
+);
 
 export function itemById(id: ItemId): Item | undefined {
   return BY_ID.get(id);
 }
 
 export function radicalByMeaning(name: string): Item | undefined {
-  return CORPUS.find((i) => i.type === 'radical' && i.meaning === name);
+  return CATALOGUE.find((i) => i.type === 'radical' && i.meaning === name);
 }
 
 // A kanji's `parts` (radical meanings) resolved to glyphs where possible.
@@ -90,11 +92,11 @@ export function relatedItems(item: Item): Item[] {
       .filter((i): i is Item => i !== undefined);
   }
   if (item.type === 'kanji') {
-    return CORPUS.filter(
+    return CATALOGUE.filter(
       (i) => i.type === 'vocab' && i.uses.includes(item.char),
     );
   }
-  return CORPUS.filter(
+  return CATALOGUE.filter(
     (i) => i.type === 'kanji' && i.parts.includes(item.meaning),
   );
 }

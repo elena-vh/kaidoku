@@ -1,19 +1,19 @@
 import { describe, expect, it } from 'vitest';
-import { CORPUS, itemById, radicalByMeaning } from './corpus.ts';
-import { validateCorpus } from './validate.ts';
+import { CATALOGUE, itemById, radicalByMeaning } from './catalogue.ts';
+import { validateCatalogue } from './validate.ts';
 import { itemId } from '../types.ts';
 
-describe('corpus', () => {
+describe('catalogue', () => {
   it('ports the full handoff data set (133 items)', () => {
     // Handoff prose claims 140; the actual data file is 133. See data/raw.ts.
-    expect(CORPUS).toHaveLength(133);
-    expect(CORPUS.filter((i) => i.type === 'radical')).toHaveLength(37);
-    expect(CORPUS.filter((i) => i.type === 'kanji')).toHaveLength(58);
-    expect(CORPUS.filter((i) => i.type === 'vocab')).toHaveLength(38);
+    expect(CATALOGUE).toHaveLength(133);
+    expect(CATALOGUE.filter((i) => i.type === 'radical')).toHaveLength(37);
+    expect(CATALOGUE.filter((i) => i.type === 'kanji')).toHaveLength(58);
+    expect(CATALOGUE.filter((i) => i.type === 'vocab')).toHaveLength(38);
   });
 
   it('assigns every item a `${type}:${char}` id', () => {
-    for (const item of CORPUS) {
+    for (const item of CATALOGUE) {
       expect(item.id).toBe(itemId(item.type, item.char));
     }
   });
@@ -63,7 +63,7 @@ describe('corpus', () => {
   });
 
   it('has no dangling parts or uses references', () => {
-    const problems = validateCorpus();
+    const problems = validateCatalogue();
     expect(problems, problems.map((p) => p.message).join('\n')).toEqual([]);
   });
 });

@@ -1,7 +1,7 @@
 import { useEffect, useRef, type KeyboardEvent } from 'react';
 import { useApp, useDispatch, useNow } from '../state/AppContext.tsx';
 import type { SessionState } from '../state/reducer.ts';
-import { CORPUS, itemById } from '../data/corpus.ts';
+import { CATALOGUE, itemById } from '../data/catalogue.ts';
 import { dueQueue } from '../engine/queues.ts';
 import { stageName } from '../engine/intervals.ts';
 import { pct, typeLabel } from '../lib/format.ts';
@@ -132,7 +132,7 @@ function SessionSummary({ session }: { session: SessionState }) {
 
   const answered = session.right + session.wrong;
   const dropped = Object.keys(session.wrongIds).length;
-  const due = dueQueue(CORPUS, state.progress, now);
+  const due = dueQueue(CATALOGUE, state.progress, now);
   const cap = state.settings.cap;
 
   return (

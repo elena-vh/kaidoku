@@ -7,7 +7,7 @@ import type {
   Stage,
   Stats,
 } from '../types.ts';
-import { CORPUS, itemById } from '../data/corpus.ts';
+import { CATALOGUE, itemById } from '../data/catalogue.ts';
 import { judge } from '../engine/judge.ts';
 import { canAdvance, dueQueue, lessonQueue } from '../engine/queues.ts';
 import { freshProgress, schedule } from '../engine/schedule.ts';
@@ -22,7 +22,7 @@ export type Screen =
   | 'browse'
   | 'levels'
   | 'progress'
-  | 'leeches'
+  | 'trouble'
   | 'settings';
 
 export interface SessionState {
@@ -351,7 +351,7 @@ export function reducer(state: AppState, action: Action): AppState {
 
     case 'level/advance': {
       if (state.level >= MAX_LEVEL) return state;
-      if (!canAdvance(state.level, state.progress, CORPUS)) return state;
+      if (!canAdvance(state.level, state.progress, CATALOGUE)) return state;
       const level = state.level + 1;
       return { ...state, level, viewLevel: level };
     }

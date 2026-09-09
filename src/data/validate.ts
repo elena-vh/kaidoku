@@ -3,28 +3,28 @@
 // review cycle.
 
 import type { Item } from '../types.ts';
-import { CORPUS } from './corpus.ts';
+import { CATALOGUE } from './catalogue.ts';
 
-export interface CorpusProblem {
+export interface CatalogueProblem {
   itemId: string;
   kind: 'parts' | 'uses';
   ref: string;
   message: string;
 }
 
-export function validateCorpus(
-  corpus: readonly Item[] = CORPUS,
-): CorpusProblem[] {
-  const problems: CorpusProblem[] = [];
+export function validateCatalogue(
+  catalogue: readonly Item[] = CATALOGUE,
+): CatalogueProblem[] {
+  const problems: CatalogueProblem[] = [];
 
   const radicalMeanings = new Set(
-    corpus.filter((i) => i.type === 'radical').map((i) => i.meaning),
+    catalogue.filter((i) => i.type === 'radical').map((i) => i.meaning),
   );
   const kanjiChars = new Set(
-    corpus.filter((i) => i.type === 'kanji').map((i) => i.char),
+    catalogue.filter((i) => i.type === 'kanji').map((i) => i.char),
   );
 
-  for (const item of corpus) {
+  for (const item of catalogue) {
     if (item.type === 'kanji') {
       for (const part of item.parts) {
         if (!radicalMeanings.has(part)) {
@@ -54,11 +54,13 @@ export function validateCorpus(
   return problems;
 }
 
-export function assertCorpusValid(corpus: readonly Item[] = CORPUS): void {
-  const problems = validateCorpus(corpus);
+export function assertCatalogueValid(
+  catalogue: readonly Item[] = CATALOGUE,
+): void {
+  const problems = validateCatalogue(catalogue);
   if (problems.length > 0) {
     throw new Error(
-      `Corpus integrity check failed (${problems.length}):\n` +
+      `Catalogue integrity check failed (${problems.length}):\n` +
         problems.map((p) => `  - ${p.message}`).join('\n'),
     );
   }

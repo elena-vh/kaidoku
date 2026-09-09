@@ -3,6 +3,7 @@ import { itemId } from '../types.ts';
 import {
   ADEPT_STAGE,
   ADVANCE_THRESHOLD,
+  REPEATED_FAILURE_THRESHOLD,
   VOCAB_UNLOCK_STAGE,
 } from './intervals.ts';
 
@@ -30,11 +31,11 @@ export function isUnlocked(
 }
 
 export function dueQueue(
-  corpus: readonly Item[],
+  catalogue: readonly Item[],
   progress: ProgressMap,
   now: number,
 ): Item[] {
-  return corpus
+  return catalogue
     .filter((item) => {
       const p = progress[item.id];
       return p !== undefined && p.stage < 7 && p.due <= now;
@@ -43,11 +44,11 @@ export function dueQueue(
 }
 
 export function lessonQueue(
-  corpus: readonly Item[],
+  catalogue: readonly Item[],
   progress: ProgressMap,
   level: number,
 ): Item[] {
-  return corpus
+  return catalogue
     .filter(
       (item) =>
         isUnlocked(item, progress, level) && progress[item.id] === undefined,
@@ -56,12 +57,12 @@ export function lessonQueue(
       (a, b) =>
         a.level - b.level ||
         TYPE_ORDER[a.type] - TYPE_ORDER[b.type] ||
-        corpus.indexOf(a) - corpus.indexOf(b),
+        catalogue.indexOf(a) - catalogue.indexOf(b),
     );
 }
 
-function levelKanji(corpus: readonly Item[], level: number): Item[] {
-  return corpus.filter((i) => i.type === 'kanji' && i.level === level);
+function levelKanji(catalogue: readonly Item[], level: number): Item[] {
+  return catalogue.filter((i) => i.type === 'kanji' && i.level === level);
 }
 
 // A level advances when >= 90% of its kanji are at Adept. Radicals and vocab
@@ -69,10 +70,10 @@ function levelKanji(corpus: readonly Item[], level: number): Item[] {
 export function canAdvance(
   level: number,
   progress: ProgressMap,
-  corpus: readonly Item[],
+  catalogue: readonly Item[],
 ): boolean {
   if (level >= MAX_LEVEL) return false;
-  const kanji = levelKanji(corpus, level);
+  const kanji = levelKanji(catalogue, level);
   if (kanji.length === 0) return false;
   const atAdept = kanji.filter((k) => {
     const stage = stageOf(progress, k.id);
@@ -84,9 +85,9 @@ export function canAdvance(
 export function levelAdeptProgress(
   level: number,
   progress: ProgressMap,
-  corpus: readonly Item[],
+  catalogue: readonly Item[],
 ): { atAdept: number; total: number; needed: number } {
-  const kanji = levelKanji(corpus, level);
+  const kanji = levelKanji(catalogue, level);
   const atAdept = kanji.filter((k) => {
     const stage = stageOf(progress, k.id);
     return stage !== null && stage >= ADEPT_STAGE;
@@ -96,4 +97,17 @@ export function levelAdeptProgress(
     total: kanji.length,
     needed: Math.ceil(kanji.length * ADVANCE_THRESHOLD),
   };
+}
+
+export function repeatedlyFailed(
+  catalogue: readonly Item[],
+  progress: ProgressMap,
+): Item[] {
+  return catalogue
+    .filter(
+      (item) => (progress[item.id]?.lapses ?? 0) >= REPEATED_FAILURE_THRESHOLD,
+    )
+    .sort(
+      (a, b) => (progress[b.id]?.lapses ?? 0) - (progress[a.id]?.lapses ?? 0),
+    );
 }
