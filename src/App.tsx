@@ -1,19 +1,19 @@
-import { AppProvider, useApp } from './state/AppContext.tsx'
-import { TodayScreen } from './screens/Today.tsx'
-import { LessonScreen } from './screens/Lesson.tsx'
-import { ReviewScreen } from './screens/Review.tsx'
+import { AppProvider, useApp } from './state/AppContext.tsx';
+import { TodayScreen } from './screens/Today.tsx';
+import { LessonScreen } from './screens/Lesson.tsx';
+import { ReviewScreen } from './screens/Review.tsx';
 
 function Router() {
-  const { screen } = useApp()
+  const { screen } = useApp();
   switch (screen) {
     case 'review':
-      return <ReviewScreen />
+      return <ReviewScreen />;
     case 'lesson':
-      return <LessonScreen />
+      return <LessonScreen />;
     case 'today':
-      return <TodayScreen />
+      return <TodayScreen />;
     default:
-      return <TodayScreen />
+      return <TodayScreen />;
   }
 }
 
@@ -22,5 +22,5 @@ export default function App() {
     <AppProvider>
       <Router />
     </AppProvider>
-  )
+  );
 }

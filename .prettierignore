@@ -1,0 +1,7 @@
+node_modules
+dist
+package-lock.json
+
+# vendored source data and the file generated from it
+kanji-data.js
+src/data/raw.ts

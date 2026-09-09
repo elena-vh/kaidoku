@@ -2,25 +2,27 @@
 // item - run as a test so a content typo shows up on the spot, not weeks into a
 // review cycle.
 
-import type { Item } from '../types.ts'
-import { CORPUS } from './corpus.ts'
+import type { Item } from '../types.ts';
+import { CORPUS } from './corpus.ts';
 
 export interface CorpusProblem {
-  itemId: string
-  kind: 'parts' | 'uses'
-  ref: string
-  message: string
+  itemId: string;
+  kind: 'parts' | 'uses';
+  ref: string;
+  message: string;
 }
 
-export function validateCorpus(corpus: readonly Item[] = CORPUS): CorpusProblem[] {
-  const problems: CorpusProblem[] = []
+export function validateCorpus(
+  corpus: readonly Item[] = CORPUS,
+): CorpusProblem[] {
+  const problems: CorpusProblem[] = [];
 
   const radicalMeanings = new Set(
     corpus.filter((i) => i.type === 'radical').map((i) => i.meaning),
-  )
+  );
   const kanjiChars = new Set(
     corpus.filter((i) => i.type === 'kanji').map((i) => i.char),
-  )
+  );
 
   for (const item of corpus) {
     if (item.type === 'kanji') {
@@ -31,7 +33,7 @@ export function validateCorpus(corpus: readonly Item[] = CORPUS): CorpusProblem[
             kind: 'parts',
             ref: part,
             message: `${item.id} (${item.char}) has part "${part}" with no radical of that meaning`,
-          })
+          });
         }
       }
     }
@@ -43,21 +45,21 @@ export function validateCorpus(corpus: readonly Item[] = CORPUS): CorpusProblem[
             kind: 'uses',
             ref: use,
             message: `${item.id} (${item.char}) uses "${use}" with no kanji of that character`,
-          })
+          });
         }
       }
     }
   }
 
-  return problems
+  return problems;
 }
 
 export function assertCorpusValid(corpus: readonly Item[] = CORPUS): void {
-  const problems = validateCorpus(corpus)
+  const problems = validateCorpus(corpus);
   if (problems.length > 0) {
     throw new Error(
       `Corpus integrity check failed (${problems.length}):\n` +
         problems.map((p) => `  - ${p.message}`).join('\n'),
-    )
+    );
   }
 }
