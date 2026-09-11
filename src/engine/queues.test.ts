@@ -1,7 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import type { Item, Progress, ProgressMap, Stage } from '../types.ts';
 import { itemId } from '../types.ts';
-import { canAdvance, dueQueue, isUnlocked, lessonQueue } from './queues.ts';
+import {
+  canAdvance,
+  dueQueue,
+  isUnlocked,
+  lessonQueue,
+  repeatedlyFailed,
+} from './queues.ts';
 import { HOUR_MS } from './intervals.ts';
 
 const T0 = 1_700_000_000_000;
@@ -187,5 +193,37 @@ describe('canAdvance', () => {
 
   it('is false for a level with no kanji', () => {
     expect(canAdvance(1, {}, [radical('r1', 1)])).toBe(false);
+  });
+});
+
+describe('repeatedlyFailed', () => {
+  const failed = (lapses: number): Progress => ({
+    stage: 1,
+    due: T0,
+    lapses,
+    seen: 10,
+    correct: 10 - lapses,
+  });
+
+  it('returns items failed 3 or more times, worst first', () => {
+    const catalogue = [kanji('a', 1), kanji('b', 1), kanji('c', 1)];
+    const progress: ProgressMap = {
+      [itemId('kanji', 'a')]: failed(3),
+      [itemId('kanji', 'b')]: failed(5),
+      [itemId('kanji', 'c')]: failed(1),
+    };
+    expect(repeatedlyFailed(catalogue, progress).map((i) => i.char)).toEqual([
+      'b',
+      'a',
+    ]);
+  });
+
+  it('does not count an item failed only twice', () => {
+    const progress: ProgressMap = { [itemId('kanji', 'a')]: failed(2) };
+    expect(repeatedlyFailed([kanji('a', 1)], progress)).toEqual([]);
+  });
+
+  it('is empty when nothing has been started', () => {
+    expect(repeatedlyFailed([kanji('a', 1)], {})).toEqual([]);
   });
 });

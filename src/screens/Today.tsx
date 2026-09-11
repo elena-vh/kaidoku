@@ -14,7 +14,6 @@ export function TodayScreen() {
     <section aria-label='Today'>
       <h1>Kaidoku</h1>
       <p>Level {state.level}</p>
-
       <p>
         {due.length === 0
           ? 'The queue is empty. Nothing is owed until the next interval falls due.'

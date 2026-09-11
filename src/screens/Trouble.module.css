@@ -1,0 +1,89 @@
+.page {
+  max-width: 1060px;
+  margin: 0 auto;
+  padding: 52px 24px 110px;
+}
+.title {
+  font-size: 46px;
+  font-weight: 700;
+  line-height: 1.15;
+}
+.table {
+  display: flex;
+  flex-direction: column;
+  margin-top: 34px;
+}
+.row {
+  display: flex;
+  align-items: center;
+  padding: 14px 4px;
+  border-bottom: 1px solid var(--divider);
+  flex-wrap: wrap;
+  gap: 18px;
+}
+.char {
+  font-size: 26px;
+  line-height: 1;
+  width: 50px;
+  height: 50px;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--bad);
+  border: 1px solid var(--divider);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.meaning {
+  font-size: 15px;
+  font-weight: 700;
+  flex: 1;
+  min-width: 120px;
+}
+.stage {
+  font-size: 13px;
+  color: var(--ink-4);
+  min-width: 74px;
+}
+.lapses {
+  font-size: 13px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  min-width: 80px;
+}
+.correct {
+  font-size: 13px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  min-width: 52px;
+}
+.amend {
+  background: var(--surface);
+  border: none;
+  color: var(--ink);
+  font-size: 12.5px;
+  font-weight: 700;
+  padding: 8px 17px;
+  border-radius: var(--radius-pill);
+}
+
+.amend:hover {
+  background: var(--surface-2);
+}
+.intro {
+  color: var(--ink-3);
+  max-width: 60ch;
+  margin-top: 14px;
+  font-size: 16px;
+}
+.drill {
+  border: 1px solid transparent;
+  background-color: transparent;
+  color: var(--bad);
+  box-shadow: var(--shadow-specimen);
+  padding: 15px 30px;
+  font-size: 16px;
+  font-weight: 700;
+  margin-top: 32px;
+}

@@ -1,0 +1,67 @@
+.bar {
+  background: var(--bg);
+  box-shadow: var(--shadow-rule);
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+.inner {
+  max-width: 1060px;
+  margin: 0 auto;
+  padding: 14px 24px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+.mark {
+  border-radius: 50%;
+  background-color: var(--accent-tint);
+  color: var(--accent-text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  font-size: 16pxB;
+  flex-shrink: 0;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  font-size: 19px;
+  white-space: nowrap;
+}
+.button {
+  border: none;
+  background-color: transparent;
+  color: var(--ink-3);
+  font-size: 14px;
+  padding: 8px 13px;
+  border-radius: var(--radius-pill);
+}
+.button[aria-current='page'] {
+  background-color: var(--surface-2);
+  color: var(--ink);
+}
+.button:hover {
+  background-color: var(--surface-2);
+  color: var(--ink);
+}
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  flex: 1;
+}
+.level {
+  background-color: var(--accent-tint);
+  color: var(--accent-text);
+  font-weight: 700;
+  font-size: 13px;
+  padding: 6px 15px;
+  border-radius: var(--radius-pill);
+  font-variant-numeric: tabular-nums;
+}
