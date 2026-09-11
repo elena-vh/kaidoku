@@ -1,0 +1,21 @@
+.greeting {
+  font-size: 50px;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-top: 10px;
+}
+.container {
+  text-align: center;
+  padding: 56px 24px 110px;
+  margin: 0px auto;
+  max-width: 1060px;
+}
+.reviewsCard {
+}
+.cardsContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(268px, 1fr));
+  gap: 20px;
+  margin-top: 44px;
+  text-align: left;
+}
