@@ -111,3 +111,17 @@ export function repeatedlyFailed(
       (a, b) => (progress[b.id]?.lapses ?? 0) - (progress[a.id]?.lapses ?? 0),
     );
 }
+
+export function nextArrival(
+  catalogue: readonly Item[],
+  progress: ProgressMap,
+  now: number,
+): number | null {
+  let soonest: number | null = null;
+  for (const item of catalogue) {
+    const p = progress[item.id];
+    if (p === undefined || p.stage >= 7 || p.due <= now) continue;
+    if (soonest === null || p.due < soonest) soonest = p.due;
+  }
+  return soonest;
+}

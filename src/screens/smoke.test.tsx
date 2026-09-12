@@ -12,9 +12,7 @@ beforeEach(() => {
 describe('screen smoke tests', () => {
   it('Today renders with a fresh install and reads the empty state, not an error', () => {
     render(<App />);
-    expect(
-      screen.getByRole('heading', { name: 'Kaidoku' }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole('region', { name: 'Today' })).toBeInTheDocument();
     expect(
       screen.getByText(/the queue is empty\. nothing is owed/i),
     ).toBeInTheDocument();

@@ -6,6 +6,7 @@ import {
   dueQueue,
   isUnlocked,
   lessonQueue,
+  nextArrival,
   repeatedlyFailed,
 } from './queues.ts';
 import { HOUR_MS } from './intervals.ts';
@@ -225,5 +226,45 @@ describe('repeatedlyFailed', () => {
 
   it('is empty when nothing has been started', () => {
     expect(repeatedlyFailed([kanji('a', 1)], {})).toEqual([]);
+  });
+});
+
+describe('nextArrival', () => {
+  const catalogue = [kanji('a', 1), kanji('b', 1), kanji('c', 1)];
+
+  it('returns the soonest due date still in the future', () => {
+    const progress: ProgressMap = {
+      [itemId('kanji', 'a')]: p(2, T0 + 9 * HOUR_MS),
+      [itemId('kanji', 'b')]: p(1, T0 + 2 * HOUR_MS),
+      [itemId('kanji', 'c')]: p(3, T0 + 30 * HOUR_MS),
+    };
+    expect(nextArrival(catalogue, progress, T0)).toBe(T0 + 2 * HOUR_MS);
+  });
+
+  it('ignores items already due', () => {
+    const progress: ProgressMap = {
+      [itemId('kanji', 'a')]: p(2, T0 - HOUR_MS),
+      [itemId('kanji', 'b')]: p(1, T0 + 5 * HOUR_MS),
+    };
+    expect(nextArrival(catalogue, progress, T0)).toBe(T0 + 5 * HOUR_MS);
+  });
+
+  it('ignores sealed items', () => {
+    const progress: ProgressMap = {
+      [itemId('kanji', 'a')]: p(7, Infinity),
+      [itemId('kanji', 'b')]: p(4, T0 + 7 * HOUR_MS),
+    };
+    expect(nextArrival(catalogue, progress, T0)).toBe(T0 + 7 * HOUR_MS);
+  });
+
+  it('is null when nothing is scheduled ahead', () => {
+    expect(nextArrival(catalogue, {}, T0)).toBeNull();
+    expect(
+      nextArrival(
+        catalogue,
+        { [itemId('kanji', 'a')]: p(2, T0 - HOUR_MS) },
+        T0,
+      ),
+    ).toBeNull();
   });
 });
