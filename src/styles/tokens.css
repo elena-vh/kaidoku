@@ -25,6 +25,8 @@
   --font-body: Lora, Georgia, serif;
   --font-jp: 'Shippori Mincho', 'Hiragino Mincho ProN', serif;
 
+  --page-max: 1060px;
+
   --radius: 4px;
   --radius-pill: 2px;
 

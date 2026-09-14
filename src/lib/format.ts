@@ -44,3 +44,16 @@ export function pct(numerator: number, denominator: number): string {
   if (denominator <= 0) return '0%';
   return `${Math.round((numerator / denominator) * 100)}%`;
 }
+
+export function partOfDay(now: number): string {
+  const hour = new Date(now).getHours();
+  return hour < 12 ? 'morning' : hour < 18 ? 'afternoon' : 'evening';
+}
+
+export function dateLine(now: number): string {
+  return new Date(now).toLocaleDateString(undefined, {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+  });
+}

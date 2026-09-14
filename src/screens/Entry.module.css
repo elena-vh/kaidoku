@@ -1,0 +1,274 @@
+.page {
+  max-width: var(--page-max);
+  margin: 0 auto;
+  padding: 40px 24px 110px;
+}
+
+.back {
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: var(--font-body);
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  color: var(--ink-4);
+}
+
+.back:hover {
+  color: var(--accent-text);
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 26px;
+}
+
+.pill {
+  border: 1px solid var(--divider);
+  border-radius: var(--radius-pill);
+  padding: 4px 11px;
+  font-size: 11px;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  font-variant-numeric: tabular-nums;
+}
+
+.body {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  align-items: start;
+  gap: 48px;
+  margin-top: 22px;
+}
+
+.kanjiCard {
+  background-color: var(--bg);
+  border: 1px solid var(--surface-2);
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 1;
+  box-shadow: var(--shadow-specimen);
+}
+
+.crossV,
+.crossH {
+  position: absolute;
+  background: var(--rule-soft);
+}
+
+.crossV {
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 1px;
+}
+
+.crossH {
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 1px;
+}
+
+.kanji {
+  position: relative;
+  font-size: 152px;
+  line-height: 1;
+}
+
+.alt {
+  margin-top: 12px;
+  font-size: 15px;
+  color: var(--ink-3);
+}
+
+.readings {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 40px;
+  margin-top: 26px;
+  padding-top: 22px;
+  border-top: 1px solid var(--divider);
+}
+
+.reading {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.label {
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+}
+
+.value {
+  font-size: 19px;
+}
+
+.absent {
+  font-size: 19px;
+  color: var(--placeholder);
+}
+
+.section {
+  margin-top: 40px;
+  padding-top: 22px;
+  border-top: 1px solid var(--divider);
+}
+
+.sectionTitle {
+  margin: 0 0 14px;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+}
+
+.mnemonic {
+  max-width: 62ch;
+  font-size: 17px;
+  line-height: 1.75;
+  color: var(--ink-2);
+}
+
+.editor {
+  display: block;
+  width: 100%;
+  max-width: 62ch;
+  min-height: 120px;
+  padding: 14px 16px;
+  border: 1px solid var(--rule-firm);
+  border-radius: var(--radius);
+  background: var(--bg);
+  color: var(--ink);
+  font-size: 16px;
+  line-height: 1.7;
+  resize: vertical;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.action {
+  background: none;
+  border: 1px solid var(--divider);
+  border-radius: var(--radius-pill);
+  padding: 9px 18px;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.action:hover {
+  border-color: var(--rule-firm);
+  background: var(--surface);
+}
+
+.drill {
+  background: none;
+  border: 1px solid var(--bad);
+  border-radius: var(--radius-pill);
+  padding: 9px 18px;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--bad);
+}
+
+.stats {
+  display: flex;
+  flex-direction: column;
+  max-width: 420px;
+}
+
+.statRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 11px 2px;
+  border-bottom: 1px solid var(--rule-soft);
+  font-size: 14px;
+}
+
+.statLabel {
+  color: var(--ink-3);
+}
+
+.statValue {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.note {
+  font-size: 15px;
+  color: var(--ink-3);
+}
+
+.related {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.relatedTile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 14px;
+  border: 1px solid var(--divider);
+  border-radius: var(--radius);
+  background: none;
+  font-family: var(--font-body);
+  text-align: left;
+}
+
+.relatedTile:hover {
+  border-color: var(--rule-firm);
+}
+
+.relatedGlyph {
+  font-size: 21px;
+  line-height: 1;
+}
+
+.relatedMeaning {
+  font-size: 13px;
+  color: var(--ink-3);
+}
+
+.empty {
+  max-width: var(--page-max);
+  margin: 0 auto;
+  padding: 80px 24px;
+}
+
+@media (max-width: 760px) {
+  .body {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+
+  .kanjiCard {
+    max-width: 240px;
+  }
+
+  .kanji {
+    font-size: 120px;
+  }
+}
