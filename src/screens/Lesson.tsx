@@ -5,6 +5,7 @@ import { useApp, useDispatch, useNow } from '../state/AppContext.tsx';
 import { itemById, partGlyphs } from '../data/catalogue.ts';
 import { mnemonicFor } from '../lib/verdict.ts';
 import { typeLabel } from '../lib/format.ts';
+import styles from './Lesson.module.css';
 
 export function LessonScreen() {
   const state = useApp();
@@ -16,22 +17,28 @@ export function LessonScreen() {
 
   if (lesson.done) {
     return (
-      <section aria-label='Lesson batch entered'>
-        <h1>{lesson.queue.length} entries added to the schedule</h1>
-        <p>
+      <section aria-label='Lesson batch entered' className={styles.done}>
+        <h1 className={styles.doneHeading}>
+          {lesson.queue.length} entries added to the schedule
+        </h1>
+        <p className={styles.doneBody}>
           Each one sits at Novice I and returns in four hours. Drilling them
           right away is the cheapest way to catch the ones that did not stick.
         </p>
-        <button
-          type='button'
-          onClick={() => dispatch({ type: 'lessons/drill' })}>
-          Drill the batch
-        </button>
-        <button
-          type='button'
-          onClick={() => dispatch({ type: 'nav', screen: 'today' })}>
-          Not now
-        </button>
+        <div className={styles.doneActions}>
+          <button
+            className={styles.next}
+            type='button'
+            onClick={() => dispatch({ type: 'lessons/drill' })}>
+            Drill the batch
+          </button>
+          <button
+            className={styles.prev}
+            type='button'
+            onClick={() => dispatch({ type: 'nav', screen: 'today' })}>
+            Not now
+          </button>
+        </div>
       </section>
     );
   }
@@ -52,59 +59,76 @@ export function LessonScreen() {
       : partGlyphs(item).join(' ') || '—';
 
   return (
-    <section aria-label='Lesson'>
-      <header>
+    <section aria-label='Lesson' className={styles.page}>
+      <header className={styles.topbar}>
         <button
+          className={styles.leave}
           type='button'
           onClick={() => dispatch({ type: 'nav', screen: 'today' })}>
           Leave
         </button>
-        <progress max={lesson.queue.length} value={lesson.i} />
-        <span>
+        <progress
+          className={styles.track}
+          max={lesson.queue.length}
+          value={lesson.i}
+        />
+        <span className={styles.count}>
           {lesson.i + 1} of {lesson.queue.length}
         </span>
       </header>
 
-      <p lang='ja' style={{ fontSize: '4rem' }}>
-        {item.char}
-      </p>
-      <p>
-        {typeLabel(item.type)} · Level {item.level} ·{' '}
-        {item.strokes ? `${item.strokes} strokes` : 'component'}
-      </p>
+      <div className={styles.stage}>
+        <div className={styles.specimen}>
+          <div className={styles.crossV} />
+          <div className={styles.crossH} />
+          <p className={styles.glyph} lang='ja'>
+            {item.char}
+          </p>
+        </div>
+        <p className={styles.meta}>
+          {typeLabel(item.type)} · Level {item.level} ·{' '}
+          {item.strokes ? `${item.strokes} strokes` : 'component'}
+        </p>
 
-      <h1>
-        {item.meaning}
-        {item.alt.length ? `, ${item.alt.join(', ')}` : ''}
-      </h1>
+        <h1 className={styles.meaning}>
+          {item.meaning}
+          {item.alt.length ? `, ${item.alt.join(', ')}` : ''}
+        </h1>
 
-      <dl>
-        <dt>{readingALabel}</dt>
-        <dd lang='ja'>{readingA || '—'}</dd>
-        <dt>{readingBLabel}</dt>
-        <dd lang='ja'>{readingB || '—'}</dd>
-        <dt>Built from</dt>
-        <dd lang='ja'>{built || '—'}</dd>
-      </dl>
+        <dl className={styles.facts}>
+          <dt>{readingALabel}</dt>
+          <dd lang='ja'>{readingA || '—'}</dd>
+          <dt>{readingBLabel}</dt>
+          <dd lang='ja'>{readingB || '—'}</dd>
+          <dt>Built from</dt>
+          <dd lang='ja'>{built || '—'}</dd>
+        </dl>
+      </div>
 
-      <h2>Mnemonic</h2>
-      <p>{mnemonicFor(item, state.custom)}</p>
+      <div className={styles.section}>
+        <h2 className={styles.sectionTitle}>Mnemonic</h2>
+        <p className={styles.mnemonic}>{mnemonicFor(item, state.custom)}</p>
+      </div>
 
-      <button
-        type='button'
-        disabled={lesson.i === 0}
-        onClick={() => dispatch({ type: 'lessons/prev' })}>
-        Previous
-      </button>
-      <button
-        type='button'
-        onClick={() =>
-          last
-            ? dispatch({ type: 'lessons/commit', now })
-            : dispatch({ type: 'lessons/next' })
-        }>
-        {last ? `Enter all ${lesson.queue.length} into the schedule` : 'Next'}
-      </button>
+      <div className={styles.nav}>
+        <button
+          className={styles.prev}
+          type='button'
+          disabled={lesson.i === 0}
+          onClick={() => dispatch({ type: 'lessons/prev' })}>
+          Previous
+        </button>
+        <button
+          className={styles.next}
+          type='button'
+          onClick={() =>
+            last
+              ? dispatch({ type: 'lessons/commit', now })
+              : dispatch({ type: 'lessons/next' })
+          }>
+          {last ? `Enter all ${lesson.queue.length} into the schedule` : 'Next'}
+        </button>
+      </div>
     </section>
   );
 }
