@@ -6,6 +6,7 @@ import { dueQueue } from '../engine/queues.ts';
 import { stageName } from '../engine/intervals.ts';
 import { pct, typeLabel } from '../lib/format.ts';
 import { verdictCopy } from '../lib/verdict.ts';
+import styles from './Review.module.css';
 
 export function ReviewScreen() {
   const state = useApp();
@@ -45,40 +46,57 @@ export function ReviewScreen() {
   };
 
   return (
-    <section aria-label='Review session'>
-      <header>
-        <button type='button' onClick={() => dispatch({ type: 'review/end' })}>
+    <section aria-label='Review session' className={styles.page}>
+      <header className={styles.topbar}>
+        <button
+          className={styles.close}
+          type='button'
+          onClick={() => dispatch({ type: 'review/end' })}>
           Close
         </button>
         <progress
+          className={styles.track}
           max={session.queue.length}
           value={session.done}
           aria-label='Session progress'
         />
-        <span>
-          {Math.min(session.done + 1, session.queue.length)} of{' '}
-          {session.queue.length}
-        </span>
-        <span>
-          {answered > 0
-            ? `${pct(session.right, answered)} correct`
-            : 'no answers yet'}
+        <span className={styles.tally}>
+          <span className={styles.count}>
+            {Math.min(session.done + 1, session.queue.length)} of{' '}
+            {session.queue.length}
+          </span>
+          <span>
+            {answered > 0
+              ? `${pct(session.right, answered)} correct`
+              : 'no answers yet'}
+          </span>
         </span>
       </header>
 
-      <article>
-        <p>
+      <article className={styles.stage}>
+        <p className={styles.kicker}>
           {typeLabel(item.type)} · {stageName(stage)}
         </p>
-        <p lang='ja' style={{ fontSize: '3rem' }}>
-          {item.char}
-        </p>
-        {showReading && <p lang='ja'>{item.reading || item.on}</p>}
+        <div className={styles.specimen}>
+          <div className={styles.crossV} />
+          <div className={styles.crossH} />
+          <p className={styles.glyph} lang='ja'>
+            {item.char}
+          </p>
+        </div>
+        {showReading && (
+          <p className={styles.reading} lang='ja'>
+            {item.reading || item.on}
+          </p>
+        )}
       </article>
 
-      <div>
-        <label htmlFor='review-answer'>Meaning in English</label>
+      <div className={styles.answerBlock}>
+        <label className={styles.label} htmlFor='review-answer'>
+          Meaning in English
+        </label>
         <input
+          className={styles.input}
           id='review-answer'
           ref={inputRef}
           type='text'
@@ -93,34 +111,41 @@ export function ReviewScreen() {
           spellCheck={false}
           placeholder='type, then press return'
         />
-      </div>
-
-      <div aria-live='polite' role='status'>
-        {copy && (
-          <div>
-            <h2>{copy.title}</h2>
-            <p>{copy.stageMove}</p>
-            <p>{copy.body}</p>
-            {copy.mnemonic && <p>{copy.mnemonic}</p>}
-            <button
-              type='button'
-              onClick={() => dispatch({ type: 'review/advance' })}>
-              {copy.cta}
-            </button>
-            {verdict && verdict.kind !== 'near' && (
-              <button
-                type='button'
-                onClick={() =>
-                  dispatch({ type: 'nav', screen: 'entry', entryId: id })
-                }>
-                Open the entry
-              </button>
-            )}
-          </div>
+        {!verdict && (
+          <p className={styles.hint}>Meaning only · return to answer</p>
         )}
       </div>
 
-      {!verdict && <p>Meaning only · return to answer</p>}
+      <div className={styles.status} aria-live='polite' role='status'>
+        {copy && (
+          <div className={`${styles.verdict} ${styles[copy.tone]}`}>
+            <h2 className={styles.verdictTitle}>{copy.title}</h2>
+            <p className={styles.verdictMove}>{copy.stageMove}</p>
+            <p className={styles.verdictBody}>{copy.body}</p>
+            {copy.mnemonic && (
+              <p className={styles.verdictMnemonic}>{copy.mnemonic}</p>
+            )}
+            <div className={styles.verdictActions}>
+              <button
+                className={styles.cta}
+                type='button'
+                onClick={() => dispatch({ type: 'review/advance' })}>
+                {copy.cta}
+              </button>
+              {verdict && verdict.kind !== 'near' && (
+                <button
+                  className={styles.secondary}
+                  type='button'
+                  onClick={() =>
+                    dispatch({ type: 'nav', screen: 'entry', entryId: id })
+                  }>
+                  Open the entry
+                </button>
+              )}
+            </div>
+          </div>
+        )}
+      </div>
     </section>
   );
 }
@@ -136,32 +161,38 @@ function SessionSummary({ session }: { session: SessionState }) {
   const cap = state.settings.cap;
 
   return (
-    <section aria-label='Session complete'>
-      <h1>
+    <section aria-label='Session complete' className={styles.summary}>
+      <h1 className={styles.summaryHeading}>
         {answered === 0
           ? 'Nothing answered'
           : `${pct(session.right, answered)} correct, ${answered} answers`}
       </h1>
-      <p>
+      <p className={styles.summaryBody}>
         {dropped === 0
           ? 'Every item advanced a rank. The next of them returns in four hours.'
           : `${dropped} item${dropped === 1 ? '' : 's'} dropped back down the ladder. They are listed under Trouble if they keep it up.`}
       </p>
-      <button type='button' onClick={() => dispatch({ type: 'review/end' })}>
-        Back to Today
-      </button>
-      <button
-        type='button'
-        disabled={due.length === 0}
-        onClick={() =>
-          dispatch({
-            type: 'review/start',
-            ids: due.slice(0, cap).map((i) => i.id),
-            from: 'today',
-          })
-        }>
-        Keep going
-      </button>
+      <div className={styles.summaryActions}>
+        <button
+          className={styles.secondary}
+          type='button'
+          onClick={() => dispatch({ type: 'review/end' })}>
+          Back to Today
+        </button>
+        <button
+          className={styles.cta}
+          type='button'
+          disabled={due.length === 0}
+          onClick={() =>
+            dispatch({
+              type: 'review/start',
+              ids: due.slice(0, cap).map((i) => i.id),
+              from: 'today',
+            })
+          }>
+          Keep going
+        </button>
+      </div>
     </section>
   );
 }
